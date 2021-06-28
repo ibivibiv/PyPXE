@@ -10,6 +10,7 @@ import os
 import logging
 import signal
 import json
+import netbox_client
 from collections import defaultdict
 from time import time
 
@@ -117,8 +118,9 @@ class DHCPD:
         self.leases = defaultdict(lambda: {'ip': '', 'expire': 0, 'ipxe': self.ipxe})
         if self.save_leases_file:
             try:
-                leases_file = open(self.save_leases_file, 'rb')
-                imported = json.load(leases_file)
+                #leases_file = open(self.save_leases_file, 'rb')
+                #imported = json.load(leases_file)
+                imported = netbox_client.get_dhcp_entries()
                 import_safe = dict()
                 for lease in imported:
                     packed_mac = struct.pack('BBBBBB', *map(lambda x:int(x, 16), lease.split(':')))
